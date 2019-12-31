@@ -220,8 +220,11 @@ class SwarmSpawner(DockerSpawner):
             task_template=task_spec, endpoint_spec=endpoint_spec, name=self.service_name
         )
         create_kwargs.update(self.extra_create_kwargs)
-
-        return (yield self.docker("create_service", **create_kwargs))
+        result = yield self.docker("create_service", **create_kwargs)
+        # Chenglu added: inspect_service right after create_servce may raise
+        # Service not found error
+        yield gen.sleep(1)
+        return result
 
     @property
     def internal_hostname(self):
