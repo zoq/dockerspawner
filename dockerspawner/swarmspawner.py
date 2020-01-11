@@ -4,6 +4,7 @@ A Spawner for JupyterHub that runs each user's server in a separate docker servi
 
 from pprint import pformat
 from textwrap import dedent
+import json
 
 from docker.types import (
     ContainerSpec, TaskTemplate, Resources, EndpointSpec, Mount, DriverConfig, Placement
@@ -224,6 +225,7 @@ class SwarmSpawner(DockerSpawner):
         # Chenglu added: inspect_service right after create_servce may raise
         # Service not found error
         yield gen.sleep(1)
+        self.log.debug("Docker >>> create_service with %s", json.dumps(create_kwargs))
         return result
 
     @property

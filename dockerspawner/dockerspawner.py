@@ -639,7 +639,7 @@ class DockerSpawner(Spawner):
             'cmd': self.post_start_cmd,
             'container': container_id
         }
-        
+
         exec_id = yield self.docker("exec_create", **exec_kwargs)
 
         return self.docker("exec_start", exec_id=exec_id)
@@ -941,7 +941,7 @@ class DockerSpawner(Spawner):
         """
         # docker wants to split repo:tag
         # the part split("/")[-1] allows having an image from a custom repo
-        # with port but without tag. For example: my.docker.repo:51150/foo would not 
+        # with port but without tag. For example: my.docker.repo:51150/foo would not
         # pass this test, resulting in image=my.docker.repo:51150/foo and tag=latest
         if ':' in image.split("/")[-1]:
             # rsplit splits from right to left, allowing to have a custom image repo with port
