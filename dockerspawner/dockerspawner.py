@@ -723,7 +723,10 @@ class DockerSpawner(Spawner):
     @property
     def object_name(self):
         """Render the name of our container/service using name_template"""
-        return self.name_template.format(**self.template_namespace())
+        return self.norm_object_name(self.name_template.format(**self.template_namespace()))
+
+    def norm_object_name(self, obj_name):
+        return obj_name.replace('.', '-')
 
     def load_state(self, state):
         super(DockerSpawner, self).load_state(state)
@@ -1098,6 +1101,7 @@ class DockerSpawner(Spawner):
             port = self.port
         elif self.use_internal_ip:
             resp = yield self.docker("inspect_container", self.container_id)
+            print(resp)
             network_settings = resp["NetworkSettings"]
             if "Networks" in network_settings:
                 ip = self.get_network_ip(network_settings)
@@ -1116,7 +1120,6 @@ class DockerSpawner(Spawner):
             ip = urlparse(self.client.base_url).hostname
             if ip == "localnpipe":
                 ip = "localhost"
-
         return ip, port
 
     def get_network_ip(self, network_settings):
