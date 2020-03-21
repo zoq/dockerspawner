@@ -224,7 +224,7 @@ class SwarmSpawner(DockerSpawner):
         result = yield self.docker("create_service", **create_kwargs)
         # Chenglu added: inspect_service right after create_servce may raise
         # Service not found error
-        yield gen.sleep(1)
+        yield gen.sleep(10)
         self.log.debug("Docker >>> create_service with %s", json.dumps(create_kwargs))
         return result
 
